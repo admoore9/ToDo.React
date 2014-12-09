@@ -1,8 +1,8 @@
 [
-    {"id": 1, "isComplete": false, "text": "Take out the trash", "dateDue": "Mon Dec 10 2014 20:53:25 GMT-0600 (CST)"}
-    {"id": 2, "isComplete": false, "text": "Walk the dog", "dateDue": "Mon Dec 15 2014 20:53:25 GMT-0600 (CST)"}
-    {"id": 3, "isComplete": true, "text": "Finish term paper", "dateDue": "Mon Dec 20 2014 20:53:25 GMT-0600 (CST)"}
-    {"id": 4, "isComplete": false, "text": "Watch Interstellar", "dateDue": "Mon Dec 23 2014 20:53:25 GMT-0600 (CST)"}
-    {"id": 5, "isComplete": false, "text": "Get food for dinner", "dateDue": "Mon Dec 27 2014 20:53:25 GMT-0600 (CST)"}
+    {"id": 1, "isComplete": false, "text": "Take out the trash", "dateDue": "Mon Dec 10 2014 20:53:25 GMT-0600 (CST)"},
+    {"id": 2, "isComplete": false, "text": "Walk the dog", "dateDue": "Mon Dec 15 2014 20:53:25 GMT-0600 (CST)"},
+    {"id": 3, "isComplete": true, "text": "Finish term paper", "dateDue": "Mon Dec 20 2014 20:53:25 GMT-0600 (CST)"},
+    {"id": 4, "isComplete": false, "text": "Watch Interstellar", "dateDue": "Mon Dec 23 2014 20:53:25 GMT-0600 (CST)"},
+    {"id": 5, "isComplete": false, "text": "Get food for dinner", "dateDue": "Mon Dec 27 2014 20:53:25 GMT-0600 (CST)"},
     {"id": 6, "isComplete": true, "text": "Sleep", "dateDue": "Mon Dec 14 2014 20:53:25 GMT-0600 (CST)"}
 ]
