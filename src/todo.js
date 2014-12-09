@@ -95,12 +95,12 @@ var TaskList = React.createClass({
 });
 
 var TASKS = [
-    {"id": 1, "isComplete": false, "text": "Take out the the trash", "dateDue": "2014-12-10"},
-    {"id": 2, "isComplete": false, "text": "Walk the dog", "dateDue": "2014-12-15"},
-    {"id": 3, "isComplete": false, "text": "Finish term paper", "dateDue": "2014-12-20"},
-    {"id": 4, "isComplete": false, "text": "Watch Interstellar", "dateDue": "2014-12-26"},
-    {"id": 5, "isComplete": false, "text": "Get food for dinner", "dateDue": "2014-12-18"},
-    {"id": 6, "isComplete": false, "text": "Sleep", "dateDue": "2014-12-10"}
+    {"id": 1, "isComplete": false, "isEditing": false, "isDeleted": false, "text": "Take out the the trash", "dateDue": "2014-12-10"},
+    {"id": 2, "isComplete": true, "isEditing": false, "isDeleted": false, "text": "Walk the dog", "dateDue": "2014-12-15"},
+    {"id": 3, "isComplete": false, "isEditing": true, "isDeleted": false, "text": "Finish term paper", "dateDue": "2014-12-20"},
+    {"id": 4, "isComplete": false, "isEditing": false, "isDeleted": false, "text": "Watch Interstellar", "dateDue": "2014-12-26"},
+    {"id": 5, "isComplete": true, "isEditing": false, "isDeleted": false, "text": "Get food for dinner", "dateDue": "2014-12-18"},
+    {"id": 6, "isComplete": false, "isEditing": false, "isDeleted": false, "text": "Sleep", "dateDue": "2014-12-10"}
 ];
 
 var ToDoList = React.createClass({
