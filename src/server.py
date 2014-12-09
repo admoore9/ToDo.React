@@ -37,6 +37,16 @@ class Handler(SimpleHTTPRequestHandler):
 		else:
 			SimpleHTTPRequestHandler.do_POST(self)
 
+	def do_DELETE(self):
+		if (self.path == "/tasks.json"):
+			form = cgi.FieldStorage()
+			task_id = form.getfirst("id")
+			tasks[:] = [task for task in tasks if task.get("id") != task_id]
+			sendJSON(self)
+		else:
+			SimpleHTTPRequestHandler.do_DELETE(self)
+
+
 if __name__ == '__main__':
 	print "Server started on port 3000"
 	server = HTTPServer(('127.0.0.1', 3000), Handler)
