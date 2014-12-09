@@ -1,11 +1,38 @@
 var Task = React.createClass({
     render: function() {
+        ButtonToolbar = ReactBootstrap.ButtonToolbar
+        ButtonGroup = ReactBootstrap.ButtonGroup
+        Button = ReactBootstrap.Button;
+        Panel = ReactBootstrap.Panel;
+        Input = ReactBootstrap.Input;
+        Glyphicon = ReactBootstrap.Glyphicon;
+        ListGroup = ReactBootstrap.ListGroup;
+        Row = ReactBootstrap.Row;
+        Col = ReactBootstrap.Col;
+
+        var taskStyle = {
+            height: '50px'
+        };
+
         return (
-            <tr hidden={this.props.isComplete}>
-                <td><button type="button">Complete</button></td>
-                <td><input type="text" placeholder="Enter your task" value={this.props.text}/></td>
-                <td><input type="date" value={this.props.dateDue}/></td>
-            </tr>
+            <div>
+            <Row>
+            <hr/>
+                <Col lg={1} md={2} sm={2}>
+                    <ButtonGroup bsSize="small">
+                        <Button bsStyle="danger"><Glyphicon glyph="remove" /></Button>
+                        <Button bsStyle="success"><Glyphicon glyph="ok" /></Button>
+                    </ButtonGroup>
+                    <br/>
+                </Col>
+                <Col lg={9} md={8} sm={8}>
+                    <Input type="text" value={this.props.text}></Input>
+                </Col>
+                <Col lg={2} md={2} sm={2}>
+                    <Input type="date" value={this.props.dateDue}/>
+                </Col>
+            </Row>
+            </div>
         )
     }
 });
@@ -18,28 +45,27 @@ var TaskList = React.createClass({
                 <Task key={task.id} id={task.id} text={task.text} isComplete={task.isComplete} dateDue={task.dateDue} />
             );
         });
-        return (
-            <table>
-                <tbody>{rows}</tbody>
-            </table>
-        );
+        return (<div>{rows}</div>);
     }
 });
 
 var TaskListHeader = React.createClass({
     render: function() {
+        ButtonGroup = ReactBootstrap.ButtonGroup;
+        Button = ReactBootstrap.Button;
+        Glyphicon = ReactBootstrap.Glyphicon;
         return (
-            <table>
-                <thead>
-                    <th>My To Do List</th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><button type="button">Complete all</button></td>
-                        <td><button type="button">New task</button></td>
-                    </tr>
-                </tbody>
-            </table>
+            <Row>
+                <Col lg={3} md={2} sm={2}>
+                    <ButtonGroup>
+                        <Button type="button" bsStyle="success"><Glyphicon glyph="ok" /> Complete all</Button>
+                        <Button type="button" bsStyle="primary"><Glyphicon glyph="pencil" /> New task</Button>
+                    </ButtonGroup>
+                </Col>
+                <Col lg={9} md={2} sm={2}>
+                    <h1>My Todo List</h1>
+                </Col>
+            </Row>
         );
     }
 });
@@ -55,13 +81,24 @@ var TASKS = [
 
 var ToDoList = React.createClass({
     render: function() {
+        Row = ReactBootstrap.Row;
+        Col = ReactBootstrap.Col;
+        Panel = ReactBootstrap.Panel;
         return (
-            <div>
-                <TaskListHeader />
-                <TaskList tasks={this.props.tasks} />
-            </div>
+            <Row>
+                <Col md={12}>
+                    <Panel>
+                        <TaskListHeader />
+                        <TaskList tasks={this.props.tasks} />
+                    </Panel>
+                </Col>
+            </Row>
         );
     }
 });
 
-React.render(<ToDoList tasks={TASKS} />, document.body);
+React.render(<ToDoList tasks={TASKS} />, document.getElementById('content'));
+
+
+
+
