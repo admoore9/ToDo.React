@@ -65,6 +65,14 @@ var Task = React.createClass({
             display: 'none'
         };
 
+        var taskStatus;
+
+        if (this.props.isEditing === true) {
+            var taskStatus = <TaskEdit text={this.props.text} dateDue={this.props.dateDue} />;
+        } else {
+            var taskStatus = <TaskRead text={this.props.text} dateDue={this.props.dateDue} />;
+        }
+
         return (
             <div>
                 <Row>
@@ -75,7 +83,7 @@ var Task = React.createClass({
                             <Button bsStyle="success"><Glyphicon glyph="ok" /></Button>
                         </ButtonGroup>
                     </Col>
-                    <TaskRead text={this.props.text} dateDue={this.props.dateDue} />
+                    {taskStatus}
                 </Row>
             </div>
         )
@@ -86,9 +94,11 @@ var TaskList = React.createClass({
     render: function() {
         var rows = [];
         this.props.tasks.forEach(function(task) {
-            rows.push(
-                <Task key={task.id} id={task.id} text={task.text} isComplete={task.isComplete} dateDue={task.dateDue} />
-            );
+            if (task.isComplete !== true) {
+                rows.push(
+                    <Task key={task.id} text={task.text} isComplete={task.isComplete} isEditing={task.isEditing} dateDue={task.dateDue} />
+                );
+            }
         });
         return (<div>{rows}</div>);
     }
