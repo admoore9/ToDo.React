@@ -1,37 +1,82 @@
-var Task = React.createClass({
+var TaskEdit = React.createClass({
     render: function() {
-        ButtonToolbar = ReactBootstrap.ButtonToolbar
-        ButtonGroup = ReactBootstrap.ButtonGroup
-        Button = ReactBootstrap.Button;
-        Panel = ReactBootstrap.Panel;
         Input = ReactBootstrap.Input;
         Glyphicon = ReactBootstrap.Glyphicon;
-        ListGroup = ReactBootstrap.ListGroup;
+        return (
+            <form>
+                <Col lg={8} md={8} sm={8}>
+                    <Input type="text" value={this.props.text} max="100" buttonAfter={<Button bsStyle="success"><Glyphicon glyph="pencil" /></Button>} />
+                </Col>
+                <Col lg={2} md={2} sm={2}>
+                    <Input type="date" required="required" value={this.props.dateDue}/>
+                </Col>
+            </form>
+        );
+    }
+});
+
+var TaskRead = React.createClass({
+    render: function() {
+        return (
+            <div style={{cursor: "pointer"}}>
+                <Col lg={8} md={8} sm={8}>
+                    <span>{this.props.text}</span>
+                 </Col>
+                <Col lg={2} md={2} sm={2}>
+                    <span>{this.props.dateDue}</span>
+                </Col>
+            </div>
+        );
+    }
+});
+
+var TaskListHeader = React.createClass({
+    render: function() {
+        ButtonGroup = ReactBootstrap.ButtonGroup;
+        Button = ReactBootstrap.Button;
+        Glyphicon = ReactBootstrap.Glyphicon;
+        Row = ReactBootstrap.Row;
+        Col = ReactBootstrap.Col;
+        return (
+            <div>
+                <h1 style={{textAlign: "center"}}>My Todo List</h1>
+                <br/>
+                <Row>
+                    <Col lg={2} md={2} sm={2}>
+                        <Button type="button" bsStyle="success"><Glyphicon glyph="ok" /> All</Button>
+                    </Col>
+                    <TaskEdit text={this.props.text} dateDue={this.props.dateDue} />
+                </Row>
+            </div>
+        );
+    }
+});
+
+var Task = React.createClass({
+    render: function() {
+        ButtonGroup = ReactBootstrap.ButtonGroup
+        Button = ReactBootstrap.Button;
+        Input = ReactBootstrap.Input;
+        Glyphicon = ReactBootstrap.Glyphicon;
         Row = ReactBootstrap.Row;
         Col = ReactBootstrap.Col;
 
-        var taskStyle = {
-            height: '50px'
+        var hiddenStyle = {
+            display: 'none'
         };
 
         return (
             <div>
-            <Row>
-            <hr/>
-                <Col lg={1} md={2} sm={2}>
-                    <ButtonGroup bsSize="small">
-                        <Button bsStyle="danger"><Glyphicon glyph="remove" /></Button>
-                        <Button bsStyle="success"><Glyphicon glyph="ok" /></Button>
-                    </ButtonGroup>
-                    <br/>
-                </Col>
-                <Col lg={9} md={8} sm={8}>
-                    <Input type="text" value={this.props.text}></Input>
-                </Col>
-                <Col lg={2} md={2} sm={2}>
-                    <Input type="date" value={this.props.dateDue}/>
-                </Col>
-            </Row>
+                <Row>
+                    <hr/>
+                    <Col lg={2} md={2} sm={2}>
+                        <ButtonGroup bsSize="small">
+                            <Button bsStyle="danger"><Glyphicon glyph="remove" /></Button>
+                            <Button bsStyle="success"><Glyphicon glyph="ok" /></Button>
+                        </ButtonGroup>
+                    </Col>
+                    <TaskRead text={this.props.text} dateDue={this.props.dateDue} />
+                </Row>
             </div>
         )
     }
@@ -49,29 +94,8 @@ var TaskList = React.createClass({
     }
 });
 
-var TaskListHeader = React.createClass({
-    render: function() {
-        ButtonGroup = ReactBootstrap.ButtonGroup;
-        Button = ReactBootstrap.Button;
-        Glyphicon = ReactBootstrap.Glyphicon;
-        return (
-            <Row>
-                <Col lg={3} md={2} sm={2}>
-                    <ButtonGroup>
-                        <Button type="button" bsStyle="success"><Glyphicon glyph="ok" /> Complete all</Button>
-                        <Button type="button" bsStyle="primary"><Glyphicon glyph="pencil" /> New task</Button>
-                    </ButtonGroup>
-                </Col>
-                <Col lg={9} md={2} sm={2}>
-                    <h1>My Todo List</h1>
-                </Col>
-            </Row>
-        );
-    }
-});
-
 var TASKS = [
-    {"id": 1, "isComplete": false, "text": "Take out the trash", "dateDue": "2014-12-10"},
+    {"id": 1, "isComplete": false, "text": "Take out the the trash", "dateDue": "2014-12-10"},
     {"id": 2, "isComplete": false, "text": "Walk the dog", "dateDue": "2014-12-15"},
     {"id": 3, "isComplete": false, "text": "Finish term paper", "dateDue": "2014-12-20"},
     {"id": 4, "isComplete": false, "text": "Watch Interstellar", "dateDue": "2014-12-26"},
@@ -81,18 +105,13 @@ var TASKS = [
 
 var ToDoList = React.createClass({
     render: function() {
-        Row = ReactBootstrap.Row;
-        Col = ReactBootstrap.Col;
         Panel = ReactBootstrap.Panel;
+
         return (
-            <Row>
-                <Col md={12}>
-                    <Panel>
-                        <TaskListHeader />
-                        <TaskList tasks={this.props.tasks} />
-                    </Panel>
-                </Col>
-            </Row>
+            <Panel style={{marginTop:"30px"}}>
+                <TaskListHeader />
+                <TaskList tasks={this.props.tasks} />
+            </Panel>
         );
     }
 });
