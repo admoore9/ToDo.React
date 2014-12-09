@@ -1,6 +1,7 @@
 var TaskEdit = React.createClass({
     render: function() {
         Input = ReactBootstrap.Input;
+        Button = ReactBootstrap.Button;
         Glyphicon = ReactBootstrap.Glyphicon;
         return (
             <form>
@@ -32,18 +33,34 @@ var TaskRead = React.createClass({
 
 var TaskListHeader = React.createClass({
     render: function() {
-        ButtonGroup = ReactBootstrap.ButtonGroup;
-        Button = ReactBootstrap.Button;
-        Glyphicon = ReactBootstrap.Glyphicon;
+        var completeAll;
+
+        if (this.props.tasks.length > 0) {
+            var count = 0;
+            this.props.tasks.forEach( function(task) {
+                if (!task.isComplete && !task.isDeleted) {
+                    count++;
+                }
+            });
+
+            if (count > 0) {
+                Button = ReactBootstrap.Button;
+                Glyphicon = ReactBootstrap.Glyphicon;
+
+                completeAll = <Button type="button" bsStyle="success"><Glyphicon glyph="ok" /> All</Button>;
+            }
+        }
+
         Row = ReactBootstrap.Row;
         Col = ReactBootstrap.Col;
+
         return (
             <div>
                 <h1 style={{textAlign: "center"}}>My Todo List</h1>
                 <br/>
                 <Row>
                     <Col lg={2} md={2} sm={2}>
-                        <Button type="button" bsStyle="success"><Glyphicon glyph="ok" /> All</Button>
+                        {completeAll}
                     </Col>
                     <TaskEdit text={this.props.text} dateDue={this.props.dateDue} />
                 </Row>
@@ -119,7 +136,7 @@ var ToDoList = React.createClass({
 
         return (
             <Panel style={{marginTop:"30px"}}>
-                <TaskListHeader />
+                <TaskListHeader tasks={this.props.tasks} />
                 <TaskList tasks={this.props.tasks} />
             </Panel>
         );
