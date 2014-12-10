@@ -113,39 +113,27 @@ var TaskList = React.createClass({
 
 var task_id = 6;
 var TaskListHeader = React.createClass({
-    getInitialState: function() {
+
+    getDefaultProps: function() {
         return {
-            tasks: [],
+            handleSubmit: function() {},
+            url: '',
+            pollInterval: 100000,
+            tasks: []
         };
     },
+
     handleSubmit: function(e) {
         e.preventDefault();
-        console.log('handleSubmit');
         var text = this.refs.textInput.getInputDOMNode().value;
         var dateDue = this.refs.dateDueInput.getInputDOMNode().value;
         if (!text || !dateDue) { return; }
         task_id++;
         this.refs.textInput.getInputDOMNode().value = '';
         this.refs.dateDueInput.getInputDOMNode().value = '';
-
-        var new_tasks = this.props.tasks;
-        var task = {id: task_id, isComplete: false, isDeleted: false, text: text, dateDue: dateDue}
-        new_tasks.push(task);
-        this.setState({tasks: new_tasks}), function() {
-            $.ajax({
-                url: this.props.url,
-                dataType: 'json',
-                type: 'POST',
-                data: task,
-                success: function(tasks) {
-                    this.setState({tasks: tasks});
-                }.bind(this),
-                error: function(xhr, status, err) {
-                    console.error(this.props.url, status, err.toString());
-                }
-            });
-        }
+        this.props.handleSubmit(text, dateDue);
     },
+
     render: function() {
         var completeAllButton;
         
@@ -221,6 +209,28 @@ var ToDoList = React.createClass({
             }.bind(this)
         });
     },
+
+    handleAddTask: function(text, dateDue) {
+        var _this = this;
+        console.log('handleSubmit');
+        
+        var new_tasks = this.state.tasks;
+        var task = {id: task_id, isComplete: false, isDeleted: false, text: text, dateDue: dateDue}
+        new_tasks.push(task);
+        $.ajax({
+            url: _this.props.url,
+            dataType: 'json',
+            type: 'POST',
+            data: task,
+            success: function(tasks) {
+                _this.setState({tasks: new_tasks});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(_this.props.url, status, err.toString());
+            }
+        });
+    },
+
     getInitialState: function() {
         return {
             tasks: [],
@@ -236,6 +246,7 @@ var ToDoList = React.createClass({
         return (
             <Panel style={{marginTop:"30px"}}>
                 <TaskListHeader
+                    handleSubmit={this.handleAddTask}
                     tasks={this.state.tasks}
                     url={this.props.url}
                 />

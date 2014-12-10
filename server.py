@@ -8,7 +8,7 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
 import cgitb
 cgitb.enable()
 
-tasks = json.loads(open('tasks.json').read())
+tasks = json.loads(open('./src/tasks.json').read())
 
 def sendJSON(response):
 	response.send_response(200)
@@ -18,13 +18,19 @@ def sendJSON(response):
 
 class Handler(SimpleHTTPRequestHandler):
 	def go_GET(self):
+		if self.path == "/":
+			response.send_response(200)
+			response.send_header('Content-Type', 'text/html')
+			response.end_headers()
+			response.wfile.write(f.open('./src/todo.html'))
 		if (self.path == "/tasks.json"):
 			sendJSON(self)
 		else:
 			SimpleHTTPRequestHandler.do_GET(self)
 
 	def do_POST(self):
-		if (self.path == "/tasks.json"):
+
+		if (self.path == "/src/tasks.json"):
 			form = cgi.FieldStorage(
 				fp=self.rfile,
 				headers=self.headers,
@@ -42,7 +48,7 @@ class Handler(SimpleHTTPRequestHandler):
 			SimpleHTTPRequestHandler.do_POST(self)
 
 	def do_DELETE(self):
-		if (self.path == "/tasks.json"):
+		if (self.path == "/src/tasks.json"):
 			form = cgi.FieldStorage()
 			task_id = form.getfirst("id")
 			tasks[:] = [task for task in tasks if task.get("id") != task_id]
