@@ -1,93 +1,80 @@
-var TaskEdit = React.createClass({
+var Task = React.createClass({
+    getInitialState: function() {
+        return {
+            isEditing: false
+        };
+    },
+    handleEditTask: function() {
+        this.setState({isEditing: true});
+        return;
+    },
+    handleSaveTask: function(e) {
+        e.preventDefault();
+        
+        // TODO: send request to the server
+        this.props.text = this.refs.textInput.getInputDOMNode().value;
+        this.props.dateDue = this.refs.dateDueInput.getInputDOMNode().value;
+
+        this.setState({isEditing: false});
+        return;
+    },
+    handleCancelEditTask: function() {
+        this.setState({isEditing: false});
+        return;
+    },
+    handleCompleteTask: function() {
+        // TODO
+        return;
+    },
+    handleDeleteTask: function() {
+        // TODO
+        return;
+    },
     render: function() {
-        Input = ReactBootstrap.Input;
+        var taskStatus;
+
+        ButtonGroup = ReactBootstrap.ButtonGroup
         Button = ReactBootstrap.Button;
         Glyphicon = ReactBootstrap.Glyphicon;
-        return (
-            <form>
+        Row = ReactBootstrap.Row;
+        Col = ReactBootstrap.Col;
+
+        var TaskView;
+
+        if (this.state.isEditing) {
+            TaskView = 
+            <form className="taskForm" onSubmit={this.handleSaveTask} style={{cursor: "pointer"}}>
                 <Col lg={8} md={8} sm={8}>
-                    <Input type="text" value={this.props.text} max="100" buttonAfter={<Button bsStyle="success"><Glyphicon glyph="pencil" /></Button>} />
+                    <Input
+                        type="text"
+                        ref="textInput"
+                        required="required"
+                        defaultValue={this.props.text}
+                        placeholder="Enter a new task..."
+                        max="100"
+                        buttonBefore={<Button bsStyle="success" type="submit" value="Post"><Glyphicon glyph="pencil"/></Button>}
+                        buttonAfter={<Button bsStyle="danger" onClick={this.handleCancelEditTask}><Glyphicon glyph="remove"/></Button>}
+                    />
                 </Col>
                 <Col lg={2} md={2} sm={2}>
-                    <Input type="date" required="required" value={this.props.dateDue}/>
+                    <Input
+                        type="date"
+                        ref="dateDueInput"
+                        required="required"
+                        defaultValue={this.props.dateDue}
+                    />
                 </Col>
             </form>
-        );
-    }
-});
-
-var TaskRead = React.createClass({
-    render: function() {
-        return (
-            <div style={{cursor: "pointer"}}>
+        } else {
+            TaskView =
+            <div style={{cursor: "pointer"}} onClick={this.handleEditTask}>
                 <Col lg={8} md={8} sm={8}>
                     <span>{this.props.text}</span>
-                 </Col>
+                </Col>
                 <Col lg={2} md={2} sm={2}>
                     <span>{this.props.dateDue}</span>
                 </Col>
             </div>
-        );
-    }
-});
-
-var TaskListHeader = React.createClass({
-    render: function() {
-        var completeAll;
-
-        if (this.props.tasks.length > 0) {
-            var count = 0;
-            this.props.tasks.forEach( function(task) {
-                if (!task.isComplete && !task.isDeleted) {
-                    count++;
-                }
-            });
-
-            if (count > 0) {
-                Button = ReactBootstrap.Button;
-                Glyphicon = ReactBootstrap.Glyphicon;
-
-                completeAll = <Button type="button" bsStyle="success"><Glyphicon glyph="ok" /> All</Button>;
-            }
-        }
-
-        Row = ReactBootstrap.Row;
-        Col = ReactBootstrap.Col;
-
-        return (
-            <div>
-                <h1 style={{textAlign: "center"}}>My Todo List</h1>
-                <br/>
-                <Row>
-                    <Col lg={2} md={2} sm={2}>
-                        {completeAll}
-                    </Col>
-                    <TaskEdit text={this.props.text} dateDue={this.props.dateDue} />
-                </Row>
-            </div>
-        );
-    }
-});
-
-var Task = React.createClass({
-    render: function() {
-        ButtonGroup = ReactBootstrap.ButtonGroup
-        Button = ReactBootstrap.Button;
-        Input = ReactBootstrap.Input;
-        Glyphicon = ReactBootstrap.Glyphicon;
-        Row = ReactBootstrap.Row;
-        Col = ReactBootstrap.Col;
-
-        var hiddenStyle = {
-            display: 'none'
-        };
-
-        var taskStatus;
-
-        if (this.props.isEditing === true) {
-            var taskStatus = <TaskEdit text={this.props.text} dateDue={this.props.dateDue} />;
-        } else {
-            var taskStatus = <TaskRead text={this.props.text} dateDue={this.props.dateDue} />;
         }
 
         return (
@@ -96,11 +83,11 @@ var Task = React.createClass({
                     <hr/>
                     <Col lg={2} md={2} sm={2}>
                         <ButtonGroup bsSize="small">
-                            <Button bsStyle="danger"><Glyphicon glyph="remove" /></Button>
-                            <Button bsStyle="success"><Glyphicon glyph="ok" /></Button>
+                            <Button bsStyle="danger" onClick={this.handleDeleteTask}><Glyphicon glyph="remove" /></Button>
+                            <Button bsStyle="success" onClick={this.handleCompleteTask}><Glyphicon glyph="ok" /></Button>
                         </ButtonGroup>
                     </Col>
-                    {taskStatus}
+                    {TaskView}
                 </Row>
             </div>
         )
@@ -109,42 +96,120 @@ var Task = React.createClass({
 
 var TaskList = React.createClass({
     render: function() {
-        var rows = [];
+        var taskList = [];
+
+        // Add each task that is not completed and not deleted to the task list
         this.props.tasks.forEach(function(task) {
-            if (task.isComplete !== true) {
-                rows.push(
-                    <Task key={task.id} text={task.text} isComplete={task.isComplete} isEditing={task.isEditing} dateDue={task.dateDue} />
+            if (!task.isComplete && !task.isDeleted) {
+                taskList.push(
+                    <Task key={task.id} text={task.text} isEditing={task.isEditing} dateDue={task.dateDue} />
                 );
             }
         });
-        return (<div>{rows}</div>);
+
+        return (<div>{taskList}</div>);
     }
 });
 
-var TASKS = [
-    {"id": 1, "isComplete": false, "isEditing": false, "isDeleted": false, "text": "Take out the the trash", "dateDue": "2014-12-10"},
-    {"id": 2, "isComplete": true, "isEditing": false, "isDeleted": false, "text": "Walk the dog", "dateDue": "2014-12-15"},
-    {"id": 3, "isComplete": false, "isEditing": true, "isDeleted": false, "text": "Finish term paper", "dateDue": "2014-12-20"},
-    {"id": 4, "isComplete": false, "isEditing": false, "isDeleted": false, "text": "Watch Interstellar", "dateDue": "2014-12-26"},
-    {"id": 5, "isComplete": true, "isEditing": false, "isDeleted": false, "text": "Get food for dinner", "dateDue": "2014-12-18"},
-    {"id": 6, "isComplete": false, "isEditing": false, "isDeleted": false, "text": "Sleep", "dateDue": "2014-12-10"}
-];
+var TaskListHeader = React.createClass({
+    render: function() {
+        var completeAllButton;
+        
+        // Check to see if there is more than 1 task that is not complete and not deleted in the list of tasks
+        // If there is, add the complete all button to the TaskListHeader
+        if (this.props.tasks.length > 0) {
+            var count = 0;
+            this.props.tasks.forEach( function(task) {
+                if (!task.isComplete && !task.isDeleted) {
+                    count++;
+                }
+            });
+
+            if (count > 1) {
+                Button = ReactBootstrap.Button;
+                Glyphicon = ReactBootstrap.Glyphicon;
+
+                completeAllButton = <Button type="button" bsStyle="success"><Glyphicon glyph="ok" /> All</Button>;
+            }
+        }
+
+        Row = ReactBootstrap.Row;
+        Col = ReactBootstrap.Col;
+        Input = ReactBootstrap.Input;
+        Button = ReactBootstrap.Button;
+        Glyphicon = ReactBootstrap.Glyphicon;
+
+        return (
+            <div>
+                <h1 style={{textAlign: "center"}}>My Todo List</h1>
+                <br/>
+                <Row>
+                    <Col lg={2} md={2} sm={2}>
+                        {completeAllButton}
+                    </Col>
+                     <form className="taskForm" onSubmit={this.handleSubmit}>
+                        <Col lg={8} md={8} sm={8}>
+                            <Input
+                                type="text"
+                                ref="textInput"
+                                required="required"
+                                defaultValue={this.props.text}
+                                placeholder="Enter a new task..."
+                                max="100"
+                                buttonAfter={<Button bsStyle="success" type="submit" value="Post"><Glyphicon glyph="pencil"/></Button>}
+                            />
+                        </Col>
+                        <Col lg={2} md={2} sm={2}>
+                            <Input
+                                type="date"
+                                ref="dateDueInput"
+                                required="required"
+                                defaultValue={this.props.dateDue}
+                            />
+                        </Col>
+                    </form>
+                </Row>
+            </div>
+        );
+    }
+});
 
 var ToDoList = React.createClass({
+    loadTasksFromServer: function() {
+        $.ajax({
+            url: this.props.url,
+            dataType: 'json',
+            success: function(data) {
+                this.setState({tasks: data});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
+    },
+    getInitialState: function() {
+        return {
+            tasks: [],
+        };
+    },
+    componentDidMount: function() {
+        this.loadTasksFromServer();
+        setInterval(this.loadTasksFromServer, this.props.pollInterval);
+    },
     render: function() {
         Panel = ReactBootstrap.Panel;
 
         return (
             <Panel style={{marginTop:"30px"}}>
-                <TaskListHeader tasks={this.props.tasks} />
-                <TaskList tasks={this.props.tasks} />
+                <TaskListHeader
+                    tasks={this.state.tasks}
+                />
+                <TaskList
+                    tasks={this.state.tasks}
+                />
             </Panel>
         );
     }
 });
 
-React.render(<ToDoList tasks={TASKS} />, document.getElementById('content'));
-
-
-
-
+React.render(<ToDoList url="tasks.json" pollInterval={5000} />, document.getElementById('content'));
