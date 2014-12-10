@@ -113,7 +113,6 @@ var TaskList = React.createClass({
 
 var task_id = 6;
 var TaskListHeader = React.createClass({
-
     getDefaultProps: function() {
         return {
             handleSubmit: function() {},
@@ -122,7 +121,9 @@ var TaskListHeader = React.createClass({
             tasks: []
         };
     },
-
+    onClickCompleteAll: function() {
+        this.props.handleCompleteAll();
+    },
     handleSubmit: function(e) {
         e.preventDefault();
         var text = this.refs.textInput.getInputDOMNode().value;
@@ -151,7 +152,7 @@ var TaskListHeader = React.createClass({
                 Button = ReactBootstrap.Button;
                 Glyphicon = ReactBootstrap.Glyphicon;
 
-                completeAllButton = <Button type="button" bsStyle="success"><Glyphicon glyph="ok" /> All</Button>;
+                completeAllButton = <Button type="button" bsStyle="success" onClick={this.onClickCompleteAll}><Glyphicon glyph="ok" /> All</Button>;
             }
         }
 
@@ -209,7 +210,6 @@ var ToDoList = React.createClass({
             }.bind(this)
         });
     },
-
     handleAddTask: function(text, dateDue) {
         var _this = this;
         console.log('handleSubmit');
@@ -230,7 +230,6 @@ var ToDoList = React.createClass({
             }
         });
     },
-
     getInitialState: function() {
         return {
             tasks: [],
@@ -239,6 +238,31 @@ var ToDoList = React.createClass({
     componentDidMount: function() {
         this.loadTasksFromServer();
         setInterval(this.loadTasksFromServer, this.props.pollInterval);
+    },
+        handleCompleteAll: function() {
+        var tasks = this.state.tasks;
+        tasks.forEach(function(task) {
+            task.isComplete = true;
+        });
+        this.setState({tasks: tasks});
+    },
+    handleCompleteTask: function(taskId) {
+        var tasks = this.state.tasks;
+        tasks.forEach(function(task) {
+            if (task.id === taskId) {
+                task.isComplete = true;
+            }
+        });
+        this.setState({tasks: tasks});
+    },
+    handleDeleteTask: function(taskId) {
+        var tasks = this.state.tasks;
+        tasks.forEach(function(task) {
+            if (task.id === taskId) {
+                task.isDeleted = true;
+            }
+        });
+        this.setState({tasks: tasks});
     },
     render: function() {
         Panel = ReactBootstrap.Panel;
@@ -249,6 +273,9 @@ var ToDoList = React.createClass({
                     handleSubmit={this.handleAddTask}
                     tasks={this.state.tasks}
                     url={this.props.url}
+                    handleCompleteAll={this.handleCompleteAll}
+                    handleCompleteTask={this.handleCompleteTask}
+                    handleDeleteTask={this.handleDeleteTask}
                 />
                 <TaskList
                     tasks={this.state.tasks}
@@ -259,4 +286,4 @@ var ToDoList = React.createClass({
     }
 });
 
-React.render(<ToDoList url="tasks.json" pollInterval={5000} />, document.getElementById('content'));
+React.render(<ToDoList url="tasks.json" pollInterval={9999999999} />, document.getElementById('content'));
