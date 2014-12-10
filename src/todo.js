@@ -111,7 +111,41 @@ var TaskList = React.createClass({
     }
 });
 
+var task_id = 6;
 var TaskListHeader = React.createClass({
+    getInitialState: function() {
+        return {
+            tasks: [],
+        };
+    },
+    handleSubmit: function(e) {
+        e.preventDefault();
+        console.log('handleSubmit');
+        var text = this.refs.textInput.getInputDOMNode().value;
+        var dateDue = this.refs.dateDueInput.getInputDOMNode().value;
+        if (!text || !dateDue) { return; }
+        task_id++;
+        this.refs.textInput.getInputDOMNode().value = '';
+        this.refs.dateDueInput.getInputDOMNode().value = '';
+
+        var new_tasks = this.props.tasks;
+        var task = {id: task_id, isComplete: false, isDeleted: false, text: text, dateDue: dateDue}
+        new_tasks.push(task);
+        this.setState({tasks: new_tasks}), function() {
+            $.ajax({
+                url: this.props.url,
+                dataType: 'json',
+                type: 'POST',
+                data: task,
+                success: function(tasks) {
+                    this.setState({tasks: tasks});
+                }.bind(this),
+                error: function(xhr, status, err) {
+                    console.error(this.props.url, status, err.toString());
+                }
+            });
+        }
+    },
     render: function() {
         var completeAllButton;
         
@@ -203,9 +237,11 @@ var ToDoList = React.createClass({
             <Panel style={{marginTop:"30px"}}>
                 <TaskListHeader
                     tasks={this.state.tasks}
+                    url={this.props.url}
                 />
                 <TaskList
                     tasks={this.state.tasks}
+                    url={this.props.url}
                 />
             </Panel>
         );

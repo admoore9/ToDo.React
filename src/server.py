@@ -5,11 +5,14 @@ import cgi
 from BaseHTTPServer import HTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 
+import cgitb
+cgitb.enable()
+
 tasks = json.loads(open('tasks.json').read())
 
 def sendJSON(response):
 	response.send_response(200)
-	response.send_header('Content-type', 'application/json')
+	response.send_header('Content-Type', 'application/json')
 	response.end_headers()
 	response.wfile.write(json.dumps(tasks))
 
@@ -29,7 +32,8 @@ class Handler(SimpleHTTPRequestHandler):
 			)
 			tasks.append({
 				u"id": form.getfirst("id"),
-				u"isComplete": form.getfirst("iscomplete"),
+				u"isComplete": form.getfirst("isComplete"),
+				u"isDeleted": form.getfirst("isDeleted"),
 				u"text": form.getfirst("text"),
 				u"dateDue": form.getfirst("dateDue")
 			})
