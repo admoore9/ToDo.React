@@ -23,7 +23,7 @@ var Task = React.createClass({
         return;
     },
     onClickCompleteTask: function() {
-        this.props.handleCompleteTask(this.props.id);        
+        this.props.handleCompleteTask(this.props.id);
         return;
     },
     onClickDeleteTask: function() {
