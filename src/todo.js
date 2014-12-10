@@ -23,11 +23,12 @@ var Task = React.createClass({
         return;
     },
     handleCompleteTask: function() {
+        this.props.handleCompleteTask(this.props.id);        
         // TODO
         return;
     },
     handleDeleteTask: function() {
-        // TODO
+        this.props.handleDeleteTask(this.props.id);
         return;
     },
     render: function() {
@@ -83,7 +84,7 @@ var Task = React.createClass({
                     <hr/>
                     <Col lg={2} md={2} sm={2}>
                         <ButtonGroup bsSize="small">
-                            <Button bsStyle="danger" onClick={this.handleDeleteTask}><Glyphicon glyph="remove" /></Button>
+                            <Button bsStyle="danger" onClick={this.handleDeleteTask}><Glyphicon glyph="trash" /></Button>
                             <Button bsStyle="success" onClick={this.handleCompleteTask}><Glyphicon glyph="ok" /></Button>
                         </ButtonGroup>
                     </Col>
@@ -95,19 +96,35 @@ var Task = React.createClass({
 });
 
 var TaskList = React.createClass({
+    handleCompleteTask: function(id) {
+        this.props.handleCompleteTask(id);
+    },
+    handleDeleteTask: function(id) {
+        this.props.handleDeleteTask(id);
+    },
     render: function() {
-        var taskList = [];
+        var tasks = [];
+        var _this = this;
 
         // Add each task that is not completed and not deleted to the task list
         this.props.tasks.forEach(function(task) {
             if (!task.isComplete && !task.isDeleted) {
-                taskList.push(
-                    <Task key={task.id} text={task.text} isEditing={task.isEditing} dateDue={task.dateDue} />
+                tasks.push(
+                    <Task
+                        key={task.id}
+                        id={task.id}
+                        text={task.text}
+                        isDeleted={task.isDeleted}
+                        isComplete={task.isComplete}
+                        dateDue={task.dateDue}
+                        handleCompleteTask={_this.handleCompleteTask}
+                        handleDeleteTask={_this.handleDeleteTask}
+                    />
                 );
             }
         });
 
-        return (<div>{taskList}</div>);
+        return (<div>{tasks}</div>);
     }
 });
 
@@ -274,12 +291,12 @@ var ToDoList = React.createClass({
                     tasks={this.state.tasks}
                     url={this.props.url}
                     handleCompleteAll={this.handleCompleteAll}
-                    handleCompleteTask={this.handleCompleteTask}
-                    handleDeleteTask={this.handleDeleteTask}
                 />
                 <TaskList
                     tasks={this.state.tasks}
                     url={this.props.url}
+                    handleCompleteTask={this.handleCompleteTask}
+                    handleDeleteTask={this.handleDeleteTask}
                 />
             </Panel>
         );
