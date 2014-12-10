@@ -364,4 +364,4 @@ var ToDoList = React.createClass({
     }
 });
 
-React.render(<ToDoList url="tasks.json" pollInterval={99999} />, document.getElementById('content'));
+React.render(<ToDoList url="tasks.json" pollInterval={999999} />, document.getElementById('content'));
