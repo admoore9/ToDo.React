@@ -22,12 +22,11 @@ var Task = React.createClass({
         this.setState({isEditing: false});
         return;
     },
-    handleCompleteTask: function() {
+    onClickCompleteTask: function() {
         this.props.handleCompleteTask(this.props.id);        
-        // TODO
         return;
     },
-    handleDeleteTask: function() {
+    onClickDeleteTask: function() {
         this.props.handleDeleteTask(this.props.id);
         return;
     },
@@ -84,8 +83,8 @@ var Task = React.createClass({
                     <hr/>
                     <Col lg={2} md={2} sm={2}>
                         <ButtonGroup bsSize="small">
-                            <Button bsStyle="danger" onClick={this.handleDeleteTask}><Glyphicon glyph="trash" /></Button>
-                            <Button bsStyle="success" onClick={this.handleCompleteTask}><Glyphicon glyph="ok" /></Button>
+                            <Button bsStyle="danger" onClick={this.onClickDeleteTask}><Glyphicon glyph="trash" /></Button>
+                            <Button bsStyle="success" onClick={this.onClickCompleteTask}><Glyphicon glyph="ok" /></Button>
                         </ButtonGroup>
                     </Col>
                     {TaskView}
@@ -256,7 +255,7 @@ var ToDoList = React.createClass({
         this.loadTasksFromServer();
         setInterval(this.loadTasksFromServer, this.props.pollInterval);
     },
-        handleCompleteAll: function() {
+    handleCompleteAll: function() {
         var tasks = this.state.tasks;
         tasks.forEach(function(task) {
             task.isComplete = true;
