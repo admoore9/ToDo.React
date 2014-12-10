@@ -67,7 +67,7 @@ var Task = React.createClass({
             </form>
         } else {
             TaskView =
-            <div style={{cursor: "pointer"}} onClick={this.props.handleEditTask}>
+            <div style={{cursor: "pointer"}} onClick={this.handleEditTask}>
                 <Col lg={8} md={8} sm={8}>
                     <span>{this.props.text}</span>
                 </Col>
