@@ -11,7 +11,7 @@ var Task = React.createClass({
     handleSaveTask: function(e) {
         e.preventDefault();
         
-        // TODO: send request to the server
+        // TODO: send request to the server to update JSON
         this.props.text = this.refs.textInput.getInputDOMNode().value;
         this.props.dateDue = this.refs.dateDueInput.getInputDOMNode().value;
 
@@ -22,22 +22,20 @@ var Task = React.createClass({
         this.setState({isEditing: false});
         return;
     },
-    onClickCompleteTask: function() {
+    handleCompleteTask: function() {
         this.props.handleCompleteTask(this.props.id);
         return;
     },
-    onClickDeleteTask: function() {
+    handleDeleteTask: function() {
         this.props.handleDeleteTask(this.props.id);
         return;
     },
     render: function() {
-        var taskStatus;
-
+        Row = ReactBootstrap.Row;
+        Col = ReactBootstrap.Col;
         ButtonGroup = ReactBootstrap.ButtonGroup
         Button = ReactBootstrap.Button;
         Glyphicon = ReactBootstrap.Glyphicon;
-        Row = ReactBootstrap.Row;
-        Col = ReactBootstrap.Col;
 
         var TaskView;
 
@@ -69,10 +67,10 @@ var Task = React.createClass({
             TaskView =
             <div style={{cursor: "pointer"}} onClick={this.handleEditTask}>
                 <Col lg={8} md={8} sm={8}>
-                    <span>{this.props.text}</span>
+                    <h3>{this.props.text}</h3>
                 </Col>
                 <Col lg={2} md={2} sm={2}>
-                    <span>{this.props.dateDue}</span>
+                    <h3>{this.props.dateDue}</h3>
                 </Col>
             </div>
         }
@@ -83,8 +81,8 @@ var Task = React.createClass({
                     <hr/>
                     <Col lg={2} md={2} sm={2}>
                         <ButtonGroup bsSize="small">
-                            <Button bsStyle="danger" onClick={this.onClickDeleteTask}><Glyphicon glyph="remove" /></Button>
-                            <Button bsStyle="success" onClick={this.onClickCompleteTask}><Glyphicon glyph="ok" /></Button>
+                            <Button bsStyle="danger" onClick={this.handleDeleteTask}><Glyphicon glyph="trash" /></Button>
+                            <Button bsStyle="success" onClick={this.handleCompleteTask}><Glyphicon glyph="ok" /></Button>
                         </ButtonGroup>
                     </Col>
                     {TaskView}
@@ -102,31 +100,91 @@ var TaskList = React.createClass({
         this.props.handleDeleteTask(id);
     },
     render: function() {
-        tasks = []
+        var tasks = [];
         var _this = this;
-        this.props.tasks.forEach(function(task) {
-            if (!task.isComplete && !task.isDeleted) {
-                tasks.push(
-                    <Task
-                        key={task.id}
-                        id={task.id}
-                        text={task.text}
-                        isDeleted={task.isDeleted}
-                        isComplete={task.isComplete}
-                        dateDue={task.dateDue}
-                        handleCompleteTask={_this.handleCompleteTask}
-                        handleDeleteTask={_this.handleDeleteTask}
-                    />
-                );
-            }
-        });
+
+        // Add each task that is not completed and not deleted to the task list
+        if (this.props.viewMode === 1) {
+            this.props.tasks.forEach(function(task) {
+                if (!task.isComplete && !task.isDeleted) {
+                    tasks.push(
+                        <Task
+                            key={task.id}
+                            id={task.id}
+                            text={task.text}
+                            isDeleted={task.isDeleted}
+                            isComplete={task.isComplete}
+                            dateDue={task.dateDue}
+                            handleCompleteTask={_this.handleCompleteTask}
+                            handleDeleteTask={_this.handleDeleteTask}
+                        />
+                    );
+                }
+            });
+        } else if (this.props.viewMode === 2) {
+            this.props.tasks.forEach(function(task) {
+                if (task.isComplete && !task.isDeleted) {
+                    tasks.push(
+                        <Task
+                            key={task.id}
+                            id={task.id}
+                            text={task.text}
+                            isDeleted={task.isDeleted}
+                            isComplete={task.isComplete}
+                            dateDue={task.dateDue}
+                            handleCompleteTask={_this.handleCompleteTask}
+                            handleDeleteTask={_this.handleDeleteTask}
+                        />
+                    );
+                }
+            });
+        } else {
+            this.props.tasks.forEach(function(task) {
+                if (task.isDeleted) {
+                    tasks.push(
+                        <Task
+                            key={task.id}
+                            id={task.id}
+                            text={task.text}
+                            isDeleted={task.isDeleted}
+                            isComplete={task.isComplete}
+                            dateDue={task.dateDue}
+                            handleCompleteTask={_this.handleCompleteTask}
+                            handleDeleteTask={_this.handleDeleteTask}
+                        />
+                    );
+                }
+            });
+        }
+
         return (<div>{tasks}</div>);
     }
 });
 
+var task_id = 6;
 var TaskListHeader = React.createClass({
+    getDefaultProps: function() {
+        return {
+            handleSubmit: function() {},
+            url: '',
+            pollInterval: 100000,
+            tasks: []
+        };
+    },
+    handleChangeViewMode: function(e) {
+    },
     onClickCompleteAll: function() {
         this.props.handleCompleteAll();
+    },
+    handleSubmit: function(e) {
+        e.preventDefault();
+        var text = this.refs.textInput.getInputDOMNode().value;
+        var dateDue = this.refs.dateDueInput.getInputDOMNode().value;
+        if (!text || !dateDue) { return; }
+        task_id++;
+        this.refs.textInput.getInputDOMNode().value = '';
+        this.refs.dateDueInput.getInputDOMNode().value = '';
+        this.props.handleSubmit(text, dateDue);
     },
     render: function() {
         var completeAllButton;
@@ -152,11 +210,35 @@ var TaskListHeader = React.createClass({
         Row = ReactBootstrap.Row;
         Col = ReactBootstrap.Col;
         Input = ReactBootstrap.Input;
+        DropdownButton = ReactBootstrap.DropdownButton;
+        MenuItem = ReactBootstrap.MenuItem;
         Button = ReactBootstrap.Button;
         Glyphicon = ReactBootstrap.Glyphicon;
 
+        var viewMenu;
+        if (this.props.viewMode == 1) {
+            viewMenu =
+                <DropdownButton title="Todo Items">
+                    <MenuItem eventKey="2" value="2" ref="completed" onClick={this.handleChangeViewMode}>Completed</MenuItem>
+                    <MenuItem eventKey="3" value="3" ref="deleted" onClick={this.handleChangeViewMode}>Deleted</MenuItem>
+                </DropdownButton>
+        } else if (this.props.viewMode == 2) {
+            viewMenu =
+                <DropdownButton title="Completed Items">
+                    <MenuItem eventKey="1" value="1" ref="todo" onClick={this.handleChangeViewMode}>Todo List</MenuItem>
+                    <MenuItem eventKey="3" value="3" ref="deleted" onClick={this.handleChangeViewMode}>Deleted</MenuItem>
+                </DropdownButton>
+        } else {
+            viewMenu =
+                <DropdownButton title="Deleted Items">
+                    <MenuItem eventKey="1" value="1" ref="todo" onClick={this.handleChangeViewMode}>Todo List</MenuItem>
+                    <MenuItem eventKey="2" value="2" ref="completed" onClick={this.handleChangeViewMode}>Completed</MenuItem>
+                </DropdownButton>
+        }
+
         return (
             <div>
+                {viewMenu}
                 <h1 style={{textAlign: "center"}}>My Todo List</h1>
                 <br/>
                 <Row>
@@ -203,9 +285,30 @@ var ToDoList = React.createClass({
             }.bind(this)
         });
     },
+    handleAddTask: function(text, dateDue) {
+        var _this = this;
+        console.log('handleSubmit');
+        
+        var new_tasks = this.state.tasks;
+        var task = {id: task_id, isComplete: false, isDeleted: false, text: text, dateDue: dateDue}
+        new_tasks.push(task);
+        $.ajax({
+            url: _this.props.url,
+            dataType: 'json',
+            type: 'POST',
+            data: task,
+            success: function(tasks) {
+                _this.setState({tasks: new_tasks});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(_this.props.url, status, err.toString());
+            }
+        });
+    },
     getInitialState: function() {
         return {
             tasks: [],
+            viewMode: 1,
         };
     },
     componentDidMount: function() {
@@ -243,17 +346,22 @@ var ToDoList = React.createClass({
         return (
             <Panel style={{marginTop:"30px"}}>
                 <TaskListHeader
+                    handleSubmit={this.handleAddTask}
                     tasks={this.state.tasks}
+                    url={this.props.url}
                     handleCompleteAll={this.handleCompleteAll}
+                    viewMode={this.state.viewMode}
                 />
                 <TaskList
                     tasks={this.state.tasks}
+                    url={this.props.url}
                     handleCompleteTask={this.handleCompleteTask}
                     handleDeleteTask={this.handleDeleteTask}
+                    viewMode={this.state.viewMode}
                 />
             </Panel>
         );
     }
 });
 
-React.render(<ToDoList url="tasks.json" pollInterval={5000} />, document.getElementById('content'));
+React.render(<ToDoList url="tasks.json" pollInterval={999999} />, document.getElementById('content'));

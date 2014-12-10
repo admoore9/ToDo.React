@@ -5,23 +5,32 @@ import cgi
 from BaseHTTPServer import HTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 
-tasks = json.loads(open('tasks.json').read())
+import cgitb
+cgitb.enable()
+
+tasks = json.loads(open('./src/tasks.json').read())
 
 def sendJSON(response):
 	response.send_response(200)
-	response.send_header('Content-type', 'application/json')
+	response.send_header('Content-Type', 'application/json')
 	response.end_headers()
 	response.wfile.write(json.dumps(tasks))
 
 class Handler(SimpleHTTPRequestHandler):
 	def go_GET(self):
+		if self.path == "/":
+			response.send_response(200)
+			response.send_header('Content-Type', 'text/html')
+			response.end_headers()
+			response.wfile.write(f.open('./src/todo.html'))
 		if (self.path == "/tasks.json"):
 			sendJSON(self)
 		else:
 			SimpleHTTPRequestHandler.do_GET(self)
 
 	def do_POST(self):
-		if (self.path == "/tasks.json"):
+
+		if (self.path == "/src/tasks.json"):
 			form = cgi.FieldStorage(
 				fp=self.rfile,
 				headers=self.headers,
@@ -29,7 +38,8 @@ class Handler(SimpleHTTPRequestHandler):
 			)
 			tasks.append({
 				u"id": form.getfirst("id"),
-				u"isComplete": form.getfirst("iscomplete"),
+				u"isComplete": form.getfirst("isComplete"),
+				u"isDeleted": form.getfirst("isDeleted"),
 				u"text": form.getfirst("text"),
 				u"dateDue": form.getfirst("dateDue")
 			})
@@ -38,7 +48,7 @@ class Handler(SimpleHTTPRequestHandler):
 			SimpleHTTPRequestHandler.do_POST(self)
 
 	def do_DELETE(self):
-		if (self.path == "/tasks.json"):
+		if (self.path == "/src/tasks.json"):
 			form = cgi.FieldStorage()
 			task_id = form.getfirst("id")
 			tasks[:] = [task for task in tasks if task.get("id") != task_id]
