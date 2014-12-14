@@ -73,10 +73,10 @@ var Task = React.createClass({
             TaskView =
             <div style={{cursor: "pointer"}} onClick={this.handleEditTask}>
                 <Col lg={8} md={8} sm={8}>
-                    <h3>{this.props.text}</h3>
+                    <p>{this.props.text}</p>
                 </Col>
                 <Col lg={2} md={2} sm={2}>
-                    <h3>{this.props.dateDue}</h3>
+                    <p>{this.props.dateDue}</p>
                 </Col>
             </div>
         }
