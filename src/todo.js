@@ -1,3 +1,9 @@
+var ViewEnum = {
+    TODO: 1, 
+    COMPLETED: 2,
+    DELETED: 3
+}
+
 var Task = React.createClass({
     getInitialState: function() {
         return {
