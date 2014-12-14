@@ -43,10 +43,10 @@ var Task = React.createClass({
         Button = ReactBootstrap.Button;
         Glyphicon = ReactBootstrap.Glyphicon;
 
-        var TaskView;
+        var taskView;
 
         if (this.state.isEditing) {
-            TaskView = 
+            taskView = 
             <form className="taskForm" onSubmit={this.handleSaveTask} style={{cursor: "pointer"}}>
                 <Col lg={8} md={8} sm={8}>
                     <Input
@@ -70,7 +70,7 @@ var Task = React.createClass({
                 </Col>
             </form>
         } else {
-            TaskView =
+            taskView =
             <div style={{cursor: "pointer"}} onClick={this.handleEditTask}>
                 <Col lg={8} md={8} sm={8}>
                     <p>{this.props.text}</p>
@@ -91,7 +91,7 @@ var Task = React.createClass({
                             <Button bsStyle="success" onClick={this.handleCompleteTask}><Glyphicon glyph="ok" /></Button>
                         </ButtonGroup>
                     </Col>
-                    {TaskView}
+                    {taskView}
                 </Row>
             </div>
         )
