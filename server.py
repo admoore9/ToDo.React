@@ -14,7 +14,8 @@ def sendJSON(response):
 	response.send_response(200)
 	response.send_header('Content-Type', 'application/json')
 	response.end_headers()
-	response.wfile.write(json.dumps(tasks))
+	with open('./src/tasks.json') as jsonfile:
+		response.wfile.write(jsonfile.read())
 
 class Handler(SimpleHTTPRequestHandler):
 	def go_GET(self):
@@ -23,7 +24,7 @@ class Handler(SimpleHTTPRequestHandler):
 			response.send_header('Content-Type', 'text/html')
 			response.end_headers()
 			response.wfile.write(f.open('./src/todo.html'))
-		if (self.path == "/tasks.json"):
+		if self.path == "/src/tasks.json":
 			sendJSON(self)
 		else:
 			SimpleHTTPRequestHandler.do_GET(self)
@@ -37,12 +38,14 @@ class Handler(SimpleHTTPRequestHandler):
 				environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type']}
 			)
 			tasks.append({
-				u"id": form.getfirst("id"),
-				u"isComplete": form.getfirst("isComplete"),
-				u"isDeleted": form.getfirst("isDeleted"),
+				u"id": int(form.getfirst("id")),
+				u"isComplete": bool(form.getfirst("isComplete")),
+				u"isDeleted": bool(form.getfirst("isDeleted")),
 				u"text": form.getfirst("text"),
 				u"dateDue": form.getfirst("dateDue")
 			})
+			with open('./src/tasks.json', 'w') as outfile:
+				json.dump(tasks, outfile)
 			sendJSON(self)
 		else:
 			SimpleHTTPRequestHandler.do_POST(self)

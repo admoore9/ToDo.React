@@ -1,8 +1,1 @@
-[
-    {"id": 1, "isComplete": false, "isDeleted": false, "text": "Take out the the trash", "dateDue": "2014-12-10"},
-    {"id": 2, "isComplete": false, "isDeleted": false, "text": "Walk the dog", "dateDue": "2014-12-15"},
-    {"id": 3, "isComplete": false, "isDeleted": false, "text": "Finish term paper", "dateDue": "2014-12-20"},
-    {"id": 4, "isComplete": false, "isDeleted": false, "text": "Watch Interstellar", "dateDue": "2014-12-26"},
-    {"id": 5, "isComplete": false, "isDeleted": false, "text": "Get food for dinner", "dateDue": "2014-12-18"},
-    {"id": 6, "isComplete": false, "isDeleted": false, "text": "Sleep", "dateDue": "2014-12-10"}
-]
+[{"text": "Take out the the trash", "isComplete": false, "dateDue": "2014-12-10", "isDeleted": false, "id": 1}, {"text": "Walk the dog", "isComplete": false, "dateDue": "2014-12-15", "isDeleted": false, "id": 2}, {"text": "Finish term paper", "isComplete": false, "dateDue": "2014-12-20", "isDeleted": false, "id": 3}, {"text": "Watch Interstellar", "isComplete": false, "dateDue": "2014-12-26", "isDeleted": false, "id": 4}, {"text": "Get food for dinner", "isComplete": false, "dateDue": "2014-12-18", "isDeleted": false, "id": 5}, {"text": "Sleep", "isComplete": false, "dateDue": "2014-12-10", "isDeleted": false, "id": 6}, {"dateDue": "2014-12-12", "text": "New Task", "id": 7, "isDeleted": true, "isComplete": true}]
