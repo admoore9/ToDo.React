@@ -4,6 +4,9 @@ var ViewEnum = {
     DELETED: "Deleted Tasks"
 }
 
+// TODO: Don't set what starting id is in the JS
+var task_id = 6;
+
 var Task = React.createClass({
     getInitialState: function() {
         return {
@@ -11,14 +14,14 @@ var Task = React.createClass({
         };
     },
 
-    // Handles shoeing the view for editing a task
+    // Handles showing the view for editing a task
     handleEditTask: function() {
         this.setState({isEditing: true});
         return;
     },
-    handleSaveTask: function(e) {
 
     // Handles saving an edited task
+    handleSaveEdit: function(e) {
         e.preventDefault();
         
         // TODO: send request to the server to update JSON
@@ -58,7 +61,7 @@ var Task = React.createClass({
 
         if (this.state.isEditing) {
             taskView = 
-                <form className="taskForm" onSubmit={this.handleSaveTask} style={{cursor: "pointer"}}>
+                <form className="taskForm" onSubmit={this.handleSaveEdit} style={{cursor: "pointer"}}>
                     <Col lg={8} md={8} sm={8}>
                         <Input
                             type="text"
@@ -217,7 +220,6 @@ var TaskList = React.createClass({
     }
 });
 
-var task_id = 6;
 var TaskListHeader = React.createClass({
     getDefaultProps: function() {
         return {
@@ -370,14 +372,14 @@ var TodoApp = React.createClass({
             }.bind(this)
         });
     },
-    handleAddTask: function(text, dateDue) {
 
     // Handles submitting a task to the todo list
+    handleAddTask: function(text, dateDue) {
         var _this = this;
-        
         var new_tasks = this.state.tasks;
         var task = {id: task_id, isComplete: false, isDeleted: false, text: text, dateDue: dateDue}
         new_tasks.push(task);
+
         //TODO ajax request
         $.ajax({
             url: _this.props.url,
