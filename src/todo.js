@@ -379,8 +379,6 @@ var TodoApp = React.createClass({
         var new_tasks = this.state.tasks;
         var task = {id: task_id, isComplete: false, isDeleted: false, text: text, dateDue: dateDue}
         new_tasks.push(task);
-
-        //TODO ajax request
         $.ajax({
             url: _this.props.url,
             dataType: 'json',
@@ -397,49 +395,97 @@ var TodoApp = React.createClass({
 
     // Handles completion of all tasks
     handleCompleteAll: function() {
-        //TODO ajax request
-        var tasks = this.state.tasks;
-        tasks.forEach(function(task) {
+        var _this = this;
+
+        var updated_tasks = this.state.tasks;
+        updated_tasks.forEach(function(task) {
             task.isComplete = true;
         });
-        this.setState({tasks: tasks});
+        $.ajax({
+            url: _this.props.url,
+            dataType: 'json',
+            type: 'PUT',
+            data: updated_tasks,
+            success: function(tasks) {
+                _this.setState({tasks: updated_tasks});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(_this.props.url, status, err.toString());
+            }
+        });
     },
 
     // Handles completion of a single task
     handleCompleteTask: function(taskId) {
-        //TODO ajax request
-        var tasks = this.state.tasks;
-        tasks.forEach(function(task) {
+        var _this = this;
+
+        var updated_tasks = this.state.tasks;
+        updated_tasks.forEach(function(task) {
             if (task.id === taskId) {
                 task.isComplete = true;
             }
         });
-        this.setState({tasks: tasks});
+        $.ajax({
+            url: _this.props.url,
+            dataType: 'json',
+            type: 'PUT',
+            data: updated_tasks,
+            success: function(tasks) {
+                _this.setState({tasks: updated_tasks});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(_this.props.url, status, err.toString());
+            }
+        });
     },
 
     // Handles deletion of a task
     handleDeleteTask: function(taskId) {
-        //TODO ajax request
-        var tasks = this.state.tasks;
-        tasks.forEach(function(task) {
+        var _this = this;
+
+        var updated_tasks = this.state.tasks;
+        updated_tasks.forEach(function(task) {
             if (task.id === taskId) {
                 task.isDeleted = true;
             }
         });
-        this.setState({tasks: tasks});
+        $.ajax({
+            url: _this.props.url,
+            dataType: 'json',
+            type: 'DELETE',
+            data: updated_tasks,
+            success: function(tasks) {
+                _this.setState({tasks: updated_tasks});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(_this.props.url, status, err.toString());
+            }
+        });
     },
 
     // Handles sending a task from deleted or completed list to the todo list
     handleSendToTodoList: function(taskId) {
-        //TODO ajax request
-        var tasks = this.state.tasks;
-        tasks.forEach(function(task) {
+        var _this = this;
+
+        var updated_tasks = this.state.tasks;
+        updated_tasks.forEach(function(task) {
             if (task.id === taskId) {
                 task.isComplete = false;
                 task.isDeleted = false;
             }
         });
-        this.setState({tasks: tasks});
+        $.ajax({
+            url: _this.props.url,
+            dataType: 'json',
+            type: 'PUT',
+            data: updated_tasks,
+            success: function(tasks) {
+                _this.setState({tasks: updated_tasks});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(_this.props.url, status, err.toString());
+            }
+        });
     },
     render: function() {
         Panel = ReactBootstrap.Panel;
