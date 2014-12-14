@@ -223,7 +223,7 @@ var TaskList = React.createClass({
 var TaskListHeader = React.createClass({
     getDefaultProps: function() {
         return {
-            handleSubmit: function() {},
+            handleAddTask: function() {},
             url: '',
             pollInterval: 100000,
             tasks: []
@@ -237,7 +237,7 @@ var TaskListHeader = React.createClass({
     },
 
     // Handles submission of a task to the todo list
-    handleSubmit: function(e) {
+    handleAddTask: function(e) {
         e.preventDefault();
         var text = this.refs.textInput.getInputDOMNode().value;
         var dateDue = this.refs.dateDueInput.getInputDOMNode().value;
@@ -248,7 +248,7 @@ var TaskListHeader = React.createClass({
         task_id++;
         this.refs.textInput.getInputDOMNode().value = '';
         this.refs.dateDueInput.getInputDOMNode().value = '';
-        this.props.handleSubmit(text, dateDue);
+        this.props.handleAddTask(text, dateDue);
     },
     render: function() {
         var completeAllButton;
@@ -288,7 +288,7 @@ var TaskListHeader = React.createClass({
                 </DropdownButton>
 
             newTask =
-                <form className="taskForm" onSubmit={this.handleSubmit}>
+                <form className="taskForm" onSubmit={this.handleAddTask}>
                     <Col lg={8} md={8} sm={8}>
                         <Input
                             type="text"
@@ -447,7 +447,7 @@ var TodoApp = React.createClass({
         return (
             <Panel style={{marginTop:"30px"}}>
                 <TaskListHeader
-                    handleSubmit={this.handleAddTask}
+                    handleAddTask={this.handleAddTask}
                     tasks={this.state.tasks}
                     url={this.props.url}
                     handleCompleteAll={this.handleCompleteAll}
