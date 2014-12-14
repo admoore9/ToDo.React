@@ -63,8 +63,8 @@ var Task = React.createClass({
                             defaultValue={this.props.text}
                             placeholder="Enter a new task..."
                             max="100"
-                            buttonBefore={<Button bsStyle="success" type="submit" value="Post"><Glyphicon glyph="pencil"/></Button>}
-                            buttonAfter={<Button bsStyle="danger" onClick={this.handleCancelEditTask}><Glyphicon glyph="remove"/></Button>}
+                            buttonBefore={<Button bsStyle="danger" onClick={this.handleCancelEditTask}><Glyphicon glyph="remove"/></Button>}
+                            buttonAfter={<Button bsStyle="success" type="submit" value="Post"><Glyphicon glyph="pencil"/></Button>}
                         />
                     </Col>
                     <Col lg={2} md={2} sm={2}>
