@@ -30,7 +30,6 @@ class Handler(SimpleHTTPRequestHandler):
 			SimpleHTTPRequestHandler.do_GET(self)
 
 	def do_POST(self):
-
 		if (self.path == "/src/tasks.json"):
 			form = cgi.FieldStorage(
 				fp=self.rfile,
@@ -39,8 +38,8 @@ class Handler(SimpleHTTPRequestHandler):
 			)
 			tasks.append({
 				u"id": int(form.getfirst("id")),
-				u"isComplete": bool(form.getfirst("isComplete")),
-				u"isDeleted": bool(form.getfirst("isDeleted")),
+				u"isComplete": False,
+				u"isDeleted": False,
 				u"text": form.getfirst("text"),
 				u"dateDue": form.getfirst("dateDue")
 			})
@@ -49,6 +48,36 @@ class Handler(SimpleHTTPRequestHandler):
 			sendJSON(self)
 		else:
 			SimpleHTTPRequestHandler.do_POST(self)
+
+	def do_PUT(self):
+		if (self.path == "/src/tasks.json"):
+			form = cgi.FieldStorage(
+				fp=self.rfile,
+				headers=self.headers,
+				environ={'REQUEST_METHOD':'PUT', 'CONTENT_TYPE':self.headers['Content-Type']}
+			)
+			tasks = []
+			ids = form.getlist("id")
+			completes = form.getlist("isComplete")
+			deletes = form.getlist("isDeleted")
+			texts = form.getlist("text")
+			datesDue = form.getlist("dateDue")
+			tasklist = zip(ids, completes, deletes, texts, datesDue)
+			print tasklist
+			for task in tasklist:
+				for task_id, complete, delete, text, dateDue in task:
+					tasks.append({
+						u"id": int(task_id),
+						u"isComplete": complete,
+						u"isDeleted": delete,
+						u"text": text,
+						u"dateDue": dateDue
+					})
+			# with open('./src/tasks.json', 'w') as outfile:
+			# 	json.dump(tasks, outfile)
+			sendJSON(self)
+		else:
+			SimpleHTTPRequestHandler.do_PUT(self)
 
 	def do_DELETE(self):
 		if (self.path == "/src/tasks.json"):
