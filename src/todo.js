@@ -10,11 +10,15 @@ var Task = React.createClass({
             isEditing: false
         };
     },
+
+    // Handles shoeing the view for editing a task
     handleEditTask: function() {
         this.setState({isEditing: true});
         return;
     },
     handleSaveTask: function(e) {
+
+    // Handles saving an edited task
         e.preventDefault();
         
         // TODO: send request to the server to update JSON
@@ -229,6 +233,8 @@ var TaskListHeader = React.createClass({
     onClickCompleteAll: function() {
         this.props.handleCompleteAll();
     },
+
+    // Handles submission of a task to the todo list
     handleSubmit: function(e) {
         e.preventDefault();
         var text = this.refs.textInput.getInputDOMNode().value;
@@ -345,9 +351,13 @@ var TodoApp = React.createClass({
         this.loadTasksFromServer();
         setInterval(this.loadTasksFromServer, this.props.pollInterval);
     },
+
+    // Handles changing to a different view (todo, completed, deleted)
     handleChangeView: function(view) {
         this.setState({view: view});
     },
+
+    // Handles loading tasks from the server
     loadTasksFromServer: function() {
         $.ajax({
             url: this.props.url,
@@ -361,6 +371,8 @@ var TodoApp = React.createClass({
         });
     },
     handleAddTask: function(text, dateDue) {
+
+    // Handles submitting a task to the todo list
         var _this = this;
         
         var new_tasks = this.state.tasks;
@@ -380,6 +392,8 @@ var TodoApp = React.createClass({
             }
         });
     },
+
+    // Handles completion of all tasks
     handleCompleteAll: function() {
         //TODO ajax request
         var tasks = this.state.tasks;
@@ -388,6 +402,8 @@ var TodoApp = React.createClass({
         });
         this.setState({tasks: tasks});
     },
+
+    // Handles completion of a single task
     handleCompleteTask: function(taskId) {
         //TODO ajax request
         var tasks = this.state.tasks;
@@ -398,6 +414,8 @@ var TodoApp = React.createClass({
         });
         this.setState({tasks: tasks});
     },
+
+    // Handles deletion of a task
     handleDeleteTask: function(taskId) {
         //TODO ajax request
         var tasks = this.state.tasks;
@@ -408,6 +426,8 @@ var TodoApp = React.createClass({
         });
         this.setState({tasks: tasks});
     },
+
+    // Handles sending a task from deleted or completed list to the todo list
     handleSendToTodoList: function(taskId) {
         //TODO ajax request
         var tasks = this.state.tasks;
