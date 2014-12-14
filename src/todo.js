@@ -233,7 +233,10 @@ var TaskListHeader = React.createClass({
         e.preventDefault();
         var text = this.refs.textInput.getInputDOMNode().value;
         var dateDue = this.refs.dateDueInput.getInputDOMNode().value;
-        if (!text || !dateDue) { return; }
+        if (!text) { return; }
+        if (!dateDue) {
+            dateDue = new Date().toISOString().split('T')[0];
+        }
         task_id++;
         this.refs.textInput.getInputDOMNode().value = '';
         this.refs.dateDueInput.getInputDOMNode().value = '';
@@ -293,7 +296,6 @@ var TaskListHeader = React.createClass({
                         <Input
                             type="date"
                             ref="dateDueInput"
-                            required="required"
                             defaultValue={this.props.dateDue}
                         />
                     </Col>
