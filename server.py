@@ -36,6 +36,8 @@ class Handler(SimpleHTTPRequestHandler):
 				headers=self.headers,
 				environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type']}
 			)
+			with open('./src/tasks.json', 'r') as infile:
+				tasks = json.loads(infile.read())
 			tasks.append({
 				u"id": int(form.getfirst("id")),
 				u"isComplete": False,
@@ -62,11 +64,9 @@ class Handler(SimpleHTTPRequestHandler):
 				isComplete = False
 				isDeleted = False
 				complete_str = form.getfirst("tasklist[" + str(i) + "][isComplete]")
-				print complete_str
 				if (complete_str == 'true'):
 					isComplete = True
 				delete_str = form.getfirst("tasklist[" + str(i) + "][isDeleted]")
-				print delete_str
 				if (delete_str == 'true'):
 					isDeleted = True
 				tasks.append({
@@ -77,7 +77,6 @@ class Handler(SimpleHTTPRequestHandler):
 					u"dateDue": form.getfirst("tasklist[" + str(i) + "][dateDue]")
 				})
 				i += 1
-			print i
 			with open('./src/tasks.json', 'w') as outfile:
 				json.dump(tasks, outfile)
 			sendJSON(self)
