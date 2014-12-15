@@ -27,7 +27,7 @@ var Task = React.createClass({
         this.props.dateDue = this.refs.dateDueInput.getInputDOMNode().value;
 
         this.setState({isEditing: false});
-        this.props.handleSaveTask(this.props.id, this.props.text, this.props.dateDue);
+        this.props.handleSaveEdit(this.props.id, this.props.text, this.props.dateDue);
         return;
     },
     handleCancelEditTask: function() {
@@ -150,8 +150,8 @@ var TaskList = React.createClass({
         this.props.handleDeleteTask(id);
         return;
     },
-    handleSaveTask: function(id, text, dateDue) {
-        this.props.handleSaveTask(id, text, dateDue);
+    handleSaveEdit: function(id, text, dateDue) {
+        this.props.handleSaveEdit(id, text, dateDue);
         return;
     },
     handleSendToTodoList: function(id) {
@@ -176,7 +176,7 @@ var TaskList = React.createClass({
                             dateDue={task.dateDue}
                             handleCompleteTask={_this.handleCompleteTask}
                             handleDeleteTask={_this.handleDeleteTask}
-                            handleSaveTask={_this.handleSaveTask}
+                            handleSaveEdit={_this.handleSaveEdit}
                             view={_this.props.view}
                         />
                     );
@@ -195,7 +195,6 @@ var TaskList = React.createClass({
                             dateDue={task.dateDue}
                             handleCompleteTask={_this.handleCompleteTask}
                             handleDeleteTask={_this.handleDeleteTask}
-                            handleSaveTask={_this.handleSaveTask}
                             handleSendToTodoList={_this.handleSendToTodoList}
                             view={_this.props.view}
                         />
@@ -213,7 +212,6 @@ var TaskList = React.createClass({
                             isDeleted={task.isDeleted}
                             isComplete={task.isComplete}
                             dateDue={task.dateDue}
-                            handleSaveTask={_this.handleSaveTask}
                             handleSendToTodoList={_this.handleSendToTodoList}
                             view={_this.props.view}
                         />
@@ -469,7 +467,7 @@ var TodoApp = React.createClass({
         });
     },
 
-    handleSaveTask: function(taskId, text, dateDue) {
+    handleSaveEdit: function(taskId, text, dateDue) {
         var _this = this;
 
         var updated_tasks = this.state.tasks;
@@ -536,7 +534,7 @@ var TodoApp = React.createClass({
                     url={this.props.url}
                     handleCompleteTask={this.handleCompleteTask}
                     handleDeleteTask={this.handleDeleteTask}
-                    handleSaveTask={this.handleSaveTask}
+                    handleSaveEdit={this.handleSaveEdit}
                     handleSendToTodoList={this.handleSendToTodoList}
                     view={this.state.view}
                 />
