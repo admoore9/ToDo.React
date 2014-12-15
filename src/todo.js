@@ -4,8 +4,7 @@ var ViewEnum = {
     DELETED: "Deleted Tasks"
 }
 
-// TODO: Don't set what starting id is in the JS
-var task_id = 6;
+var task_id
 
 var Task = React.createClass({
     getInitialState: function() {
@@ -252,7 +251,7 @@ var TaskListHeader = React.createClass({
         if (!dateDue) {
             dateDue = new Date().toISOString().split('T')[0];
         }
-        task_id++;
+        task_id = this.props.tasks.length;
         this.refs.textInput.getInputDOMNode().value = '';
         this.refs.dateDueInput.getInputDOMNode().value = '';
         this.props.handleAddTask(text, dateDue);
