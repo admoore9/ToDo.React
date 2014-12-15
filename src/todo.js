@@ -377,7 +377,7 @@ var TodoApp = React.createClass({
     handleAddTask: function(text, dateDue) {
         var _this = this;
         var new_tasks = this.state.tasks;
-        var task = {id: task_id, isComplete: false, isDeleted: false, text: text, dateDue: dateDue}
+        var task = {id: task_id, isComplete: false, isDeleted: false, text: text, dateDue: dateDue};
         new_tasks.push(task);
         $.ajax({
             url: _this.props.url,
@@ -405,7 +405,7 @@ var TodoApp = React.createClass({
             url: _this.props.url,
             dataType: 'json',
             type: 'PUT',
-            data: updated_tasks,
+            data: {tasklist: updated_tasks},
             success: function(tasks) {
                 _this.setState({tasks: updated_tasks});
             }.bind(this),
@@ -429,7 +429,7 @@ var TodoApp = React.createClass({
             url: _this.props.url,
             dataType: 'json',
             type: 'PUT',
-            data: updated_tasks,
+            data: {tasklist: updated_tasks},
             success: function(tasks) {
                 _this.setState({tasks: updated_tasks});
             }.bind(this),
@@ -452,8 +452,8 @@ var TodoApp = React.createClass({
         $.ajax({
             url: _this.props.url,
             dataType: 'json',
-            type: 'DELETE',
-            data: updated_tasks,
+            type: 'PUT',
+            data: {tasklist: updated_tasks},
             success: function(tasks) {
                 _this.setState({tasks: updated_tasks});
             }.bind(this),
@@ -478,7 +478,7 @@ var TodoApp = React.createClass({
             url: _this.props.url,
             dataType: 'json',
             type: 'PUT',
-            data: updated_tasks,
+            data: {tasklist: updated_tasks},
             success: function(tasks) {
                 _this.setState({tasks: updated_tasks});
             }.bind(this),

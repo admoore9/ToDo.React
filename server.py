@@ -57,36 +57,32 @@ class Handler(SimpleHTTPRequestHandler):
 				environ={'REQUEST_METHOD':'PUT', 'CONTENT_TYPE':self.headers['Content-Type']}
 			)
 			tasks = []
-			ids = form.getlist("id")
-			completes = form.getlist("isComplete")
-			deletes = form.getlist("isDeleted")
-			texts = form.getlist("text")
-			datesDue = form.getlist("dateDue")
-			tasklist = zip(ids, completes, deletes, texts, datesDue)
-			print tasklist
-			for task in tasklist:
-				for task_id, complete, delete, text, dateDue in task:
-					tasks.append({
-						u"id": int(task_id),
-						u"isComplete": complete,
-						u"isDeleted": delete,
-						u"text": text,
-						u"dateDue": dateDue
-					})
-			# with open('./src/tasks.json', 'w') as outfile:
-			# 	json.dump(tasks, outfile)
+			i = 0;
+			while (form.getfirst("tasklist[" + str(i) + "][id]") is not None):
+				isComplete = False
+				isDeleted = False
+				complete_str = form.getfirst("tasklist[" + str(i) + "][isComplete]")
+				print complete_str
+				if (complete_str == 'true'):
+					isComplete = True
+				delete_str = form.getfirst("tasklist[" + str(i) + "][isDeleted]")
+				print delete_str
+				if (delete_str == 'true'):
+					isDeleted = True
+				tasks.append({
+					u"id": int(form.getfirst("tasklist[" + str(i) + "][id]")),
+					u"isComplete": isComplete,
+					u"isDeleted": isDeleted,
+					u"text": form.getfirst("tasklist[" + str(i) + "][text]"),
+					u"dateDue": form.getfirst("tasklist[" + str(i) + "][dateDue]")
+				})
+				i += 1
+			print i
+			with open('./src/tasks.json', 'w') as outfile:
+				json.dump(tasks, outfile)
 			sendJSON(self)
 		else:
 			SimpleHTTPRequestHandler.do_PUT(self)
-
-	def do_DELETE(self):
-		if (self.path == "/src/tasks.json"):
-			form = cgi.FieldStorage()
-			task_id = form.getfirst("id")
-			tasks[:] = [task for task in tasks if task.get("id") != task_id]
-			sendJSON(self)
-		else:
-			SimpleHTTPRequestHandler.do_DELETE(self)
 
 
 if __name__ == '__main__':
