@@ -380,7 +380,7 @@ var TodoApp = React.createClass({
         var task = {id: task_id, isComplete: false, isDeleted: false, text: text, dateDue: dateDue}
         new_tasks.push(task);
         $.ajax({
-            url: _this.props.url,
+            url: '/addTask',
             dataType: 'json',
             type: 'POST',
             data: task,
