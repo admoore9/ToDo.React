@@ -369,6 +369,9 @@ var TodoApp = React.createClass({
             url: this.props.url,
             dataType: 'json',
             success: function(data) {
+                data.sort(function(a,b){
+                  return new Date(a.dateDue) - new Date(b.dateDue);
+                });
                 this.setState({tasks: data});
             }.bind(this),
             error: function(xhr, status, err) {
@@ -389,6 +392,9 @@ var TodoApp = React.createClass({
             type: 'POST',
             data: task,
             success: function(tasks) {
+                new_tasks.sort(function(a,b){
+                  return new Date(a.dateDue) - new Date(b.dateDue);
+                });
                 _this.setState({tasks: new_tasks});
             }.bind(this),
             error: function(xhr, status, err) {
@@ -484,6 +490,9 @@ var TodoApp = React.createClass({
             type: 'PUT',
             data: {tasklist: updated_tasks},
             success: function(tasks) {
+                updated_tasks.sort(function(a,b){
+                    return new Date(a.dateDue) - new Date(b.dateDue);
+                });
                 _this.setState({tasks: updated_tasks});
             }.bind(this),
             error: function(xhr, status, err) {
