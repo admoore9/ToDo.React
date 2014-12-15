@@ -23,12 +23,12 @@ var Task = React.createClass({
     // Handles saving an edited task
     handleSaveEdit: function(e) {
         e.preventDefault();
-        
-        // TODO: send request to the server to update JSON
+
         this.props.text = this.refs.textInput.getInputDOMNode().value;
         this.props.dateDue = this.refs.dateDueInput.getInputDOMNode().value;
 
         this.setState({isEditing: false});
+        this.props.handleSaveTask(this.props.id, this.props.text, this.props.dateDue);
         return;
     },
     handleCancelEditTask: function() {
@@ -151,6 +151,10 @@ var TaskList = React.createClass({
         this.props.handleDeleteTask(id);
         return;
     },
+    handleSaveTask: function(id, text, dateDue) {
+        this.props.handleSaveTask(id, text, dateDue);
+        return;
+    },
     handleSendToTodoList: function(id) {
         this.props.handleSendToTodoList(id);
         return;
@@ -173,6 +177,7 @@ var TaskList = React.createClass({
                             dateDue={task.dateDue}
                             handleCompleteTask={_this.handleCompleteTask}
                             handleDeleteTask={_this.handleDeleteTask}
+                            handleSaveTask={_this.handleSaveTask}
                             view={_this.props.view}
                         />
                     );
@@ -191,6 +196,7 @@ var TaskList = React.createClass({
                             dateDue={task.dateDue}
                             handleCompleteTask={_this.handleCompleteTask}
                             handleDeleteTask={_this.handleDeleteTask}
+                            handleSaveTask={_this.handleSaveTask}
                             handleSendToTodoList={_this.handleSendToTodoList}
                             view={_this.props.view}
                         />
@@ -208,6 +214,7 @@ var TaskList = React.createClass({
                             isDeleted={task.isDeleted}
                             isComplete={task.isComplete}
                             dateDue={task.dateDue}
+                            handleSaveTask={_this.handleSaveTask}
                             handleSendToTodoList={_this.handleSendToTodoList}
                             view={_this.props.view}
                         />
@@ -463,6 +470,31 @@ var TodoApp = React.createClass({
         });
     },
 
+    handleSaveTask: function(taskId, text, dateDue) {
+        var _this = this;
+
+        var updated_tasks = this.state.tasks;
+        updated_tasks.forEach(function(task) {
+            if (task.id == taskId) {
+                task.isEditing = false;
+                task.text = text;
+                task.dateDue = dateDue;
+            }
+        });
+        $.ajax({
+            url: _this.props.url,
+            dataType: 'json',
+            type: 'PUT',
+            data: {tasklist: updated_tasks},
+            success: function(tasks) {
+                _this.setState({tasks: updated_tasks});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(_this.props.url, status, err.toString());
+            }
+        });
+    },
+
     // Handles sending a task from deleted or completed list to the todo list
     handleSendToTodoList: function(taskId) {
         var _this = this;
@@ -505,6 +537,7 @@ var TodoApp = React.createClass({
                     url={this.props.url}
                     handleCompleteTask={this.handleCompleteTask}
                     handleDeleteTask={this.handleDeleteTask}
+                    handleSaveTask={this.handleSaveTask}
                     handleSendToTodoList={this.handleSendToTodoList}
                     view={this.state.view}
                 />
@@ -513,4 +546,4 @@ var TodoApp = React.createClass({
     }
 });
 
-React.render(<TodoApp url="tasks.json" pollInterval={999999} />, document.getElementById('content'));
+React.render(<TodoApp url="tasks.json" pollInterval={2000} />, document.getElementById('content'));
